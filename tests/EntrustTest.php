@@ -147,6 +147,40 @@ class EntrustTest extends PHPUnit_Framework_TestCase
         $this->assertFalse($entrust->can('any_permission'));
     }
 
+    public function testHasRolePerm()
+    {
+        /*
+        |------------------------------------------------------------
+        | Set
+        |------------------------------------------------------------
+        */
+        $app = new stdClass();
+        $entrust = m::mock('Zizaco\Entrust\Entrust[hasRole,can]', [$app]);
+
+        /*
+        |------------------------------------------------------------
+        | Expectation
+        |------------------------------------------------------------
+        */
+        $entrust->shouldReceive('hasRole')->once()->ordered()->andReturn(true);
+        $entrust->shouldReceive('can')->once()->ordered()->andReturn(true);
+
+        $entrust->shouldReceive('hasRole')->once()->ordered()->andReturn(true);
+        $entrust->shouldReceive('can')->once()->ordered()->andReturn(false);
+
+        $entrust->shouldReceive('hasRole')->once()->ordered()->andReturn(true);
+        $entrust->shouldReceive('can')->once()->ordered()->andReturn(false);
+
+        /*
+        |------------------------------------------------------------
+        | Assertion
+        |------------------------------------------------------------
+        */
+        $this->assertTrue($entrust->hasRolePerm('UserRole', 'UserPerm', true));
+        $this->assertFalse($entrust->hasRolePerm('UserRole', 'UserPerm', true));
+        $this->assertTrue($entrust->hasRolePerm('UserRole', 'UserPerm', false));
+    }
+
     public function testUser()
     {
         /*

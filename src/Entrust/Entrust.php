@@ -62,6 +62,28 @@ class Entrust
     }
 
     /**
+     * Has Roles or Permissions
+     * 
+     * @param array $roles
+     * @param array $permissions
+     * 
+     * @return bool
+     */
+    public function hasRolePerm($roles, $permissions, $requireAll = true)
+    {
+        $hasRole  = $this->hasRole($roles, $requireAll);
+        $hasPerms = $this->can($permissions, $requireAll);
+
+        if ($requireAll) {
+            $hasRolePerm = ($hasRole && $hasPerms);
+        } else {
+            $hasRolePerm = ($hasRole || $hasPerms);
+        }
+
+        return $hasRolePerm;
+    }
+
+    /**
      * Get the currently authenticated user or null.
      *
      * @return Illuminate\Auth\UserInterface|null
@@ -83,6 +105,7 @@ class Entrust
      * @param bool         $requireAll User must have all roles
      *
      * @return mixed
+     * @deprecated 5.1
      */
     public function routeNeedsRole($route, $roles, $result = null, $requireAll = true)
     {
@@ -117,6 +140,7 @@ class Entrust
      * @param bool         $requireAll  User must have all permissions
      *
      * @return mixed
+     * @deprecated 5.1
      */
     public function routeNeedsPermission($route, $permissions, $result = null, $requireAll = true)
     {
@@ -152,6 +176,7 @@ class Entrust
      * @param bool         $requireAll  User must have all roles and permissions
      *
      * @return void
+     * @deprecated 5.1
      */
     public function routeNeedsRoleOrPermission($route, $roles, $permissions, $result = null, $requireAll = false)
     {
